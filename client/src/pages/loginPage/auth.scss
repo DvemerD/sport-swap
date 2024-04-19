@@ -1,0 +1,22 @@
+.auth {
+  background: url("../assets/bicycle_bg.jpg") no-repeat center/cover;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+
+  &__wrapper {
+    background: #fff;
+    backdrop-filter: blur(15px);
+    width: 35%;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+
+  }
+
+  &__inner {
+    width: 100%;
+  }
+}

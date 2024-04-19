@@ -1,65 +1,79 @@
-import { Field, Form, Formik } from "formik";
-import * as Yup from "yup";
-import { TextField, Box, Button } from "@mui/material";
+import { LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
+import { Button, Form, Input } from "antd";
+import Title from "antd/es/typography/Title";
+import { Link } from "react-router-dom";
 
-const LogIn = () => {
+import "./login.scss";
+
+const Login = () => {
+  const onFinish = (values) => {
+    console.log("Received values of form: ", values);
+  };
   return (
-    <div>
-      <Formik
+    <div className="login">
+      <Form
+        name="normal_login"
+        className="login__form"
         initialValues={{
-          email: "",
-          password: "",
+          remember: true,
         }}
-        validationSchema={Yup.object({
-          email: Yup.string()
-            .required("Please enter email")
-            .email("Invalid email"),
-          password: Yup.string()
-            .required("Please enter password")
-            .min(8, "Password should be minimum 8 characters long"),
-        })}
-        onSubmit={(data) => console.log(data)}
+        onFinish={onFinish}
       >
-        {({ errors, touched }) => (
-          <Form>
-            <Field
-              name="email"
-              type="email"
-              as={TextField}
-              variant="outlined"
-              color="primary"
-              label="Email"
-              fullWidth
-              error={Boolean(errors.email) && Boolean(touched.email)}
-              helperText={Boolean(touched.email) && errors.email}
-            />
-            <Box height={14} />
-            <Field
-              name="password"
-              type="password"
-              as={TextField}
-              variant="outlined"
-              color="primary"
-              label="Password"
-              fullWidth
-              error={Boolean(errors.password) && Boolean(touched.password)}
-              helperText={Boolean(touched.password) && errors.password}
-            />
-            <Box height={14} />
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              size="large"
-              fullWidth
-            >
-              Log In
-            </Button>
-          </Form>
-        )}
-      </Formik>
+        <Title level={1} className="signup__title">
+          Log In
+        </Title>
+        <Form.Item
+          name="email"
+          rules={[
+            {
+              type: "email",
+              message: "The input is not valid E-mail!",
+            },
+            {
+              required: true,
+              message: "Please input your E-mail!",
+            },
+          ]}
+        >
+          <Input
+            prefix={<MailOutlined className="site-form-item-icon" />}
+            placeholder="Email"
+          />
+        </Form.Item>
+        <Form.Item
+          name="password"
+          rules={[
+            {
+              required: true,
+              message: "Please input your Password!",
+            },
+            {
+              min: 8,
+              message: "Password must be at least 8 characters!",
+            },
+          ]}
+        >
+          <Input.Password
+            prefix={<LockOutlined className="site-form-item-icon" />}
+            type="password"
+            placeholder="Password"
+          />
+        </Form.Item>
+        <Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="login-form-button"
+          >
+            Log in
+          </Button>
+        </Form.Item>
+        <Form.Item className="signup__txt">
+          No account? <Link to={"/login"}>Sign up</Link>
+        </Form.Item>
+      </Form>
     </div>
   );
 };
 
-export default LogIn;
+export default Login;

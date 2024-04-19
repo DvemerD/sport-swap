@@ -1,81 +1,123 @@
-import { Field, Form, Formik } from "formik";
-import * as Yup from "yup";
-import { TextField, Box, Button } from "@mui/material";
+import { LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
+import { Button, Form, Input } from "antd";
+import Title from "antd/es/typography/Title";
+import { Link } from "react-router-dom";
 
-const SignUp = () => {
+import "./signup.scss";
+
+const Signup = () => {
+  const onFinish = (values) => {
+    console.log("Received values of form: ", values);
+  };
   return (
-    <div>
-      <Formik
+    <div className="signup">
+      <Form
+        name="normal_login"
+        className="signup__form"
         initialValues={{
-          email: "",
-          name: "",
-          password: "",
+          remember: true,
         }}
-        validationSchema={Yup.object({
-          email: Yup.string()
-            .required("Please enter email")
-            .email("Invalid email"),
-          name: Yup.string()
-            .required("Please enter name")
-            .min(2, "Name too short"),
-          password: Yup.string()
-            .required("Please enter password")
-            .min(8, "Password should be minimum 8 characters long"),
-        })}
-        onSubmit={(data) => console.log(data)}
+        onFinish={onFinish}
       >
-        {({ errors, touched }) => (
-          <Form>
-            <Field
-              name="email"
-              type="email"
-              as={TextField}
-              variant="outlined"
-              color="primary"
-              label="Email"
-              fullWidth
-              error={Boolean(errors.email) && Boolean(touched.email)}
-              helperText={Boolean(touched.email) && errors.email}
-            />
-            <Box height={14} />
-            <Field
-              name="name"
-              type="name"
-              as={TextField}
-              variant="outlined"
-              color="primary"
-              label="Name"
-              fullWidth
-              error={Boolean(errors.name) && Boolean(touched.name)}
-              helperText={Boolean(touched.name) && errors.name}
-            />
-            <Box height={14} />
-            <Field
-              name="password"
-              type="password"
-              as={TextField}
-              variant="outlined"
-              color="primary"
-              label="Password"
-              fullWidth
-              error={Boolean(errors.password) && Boolean(touched.password)}
-              helperText={Boolean(touched.password) && errors.password}
-            />
-            <Box height={14} />
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              size="large"
-              fullWidth
-            >
-              Sign up
-            </Button>
-          </Form>
-        )}
-      </Formik>
+        <Title level={1} className="signup__title">
+          Sign Up
+        </Title>
+        <Form.Item
+          name="email"
+          rules={[
+            {
+              type: "email",
+              message: "The input is not valid E-mail!",
+            },
+            {
+              required: true,
+              message: "Please input your E-mail!",
+            },
+          ]}
+          hasFeedback
+        >
+          <Input
+            prefix={<MailOutlined className="site-form-item-icon" />}
+            placeholder="Email"
+          />
+        </Form.Item>
+        <Form.Item
+          name="username"
+          rules={[
+            {
+              required: true,
+              message: "Please input your Username!",
+            },
+          ]}
+          hasFeedback
+        >
+          <Input
+            prefix={<UserOutlined className="site-form-item-icon" />}
+            placeholder="Username"
+          />
+        </Form.Item>
+        <Form.Item
+          name="password"
+          rules={[
+            {
+              required: true,
+              message: "Please input your Password!",
+            },
+            {
+              min: 8,
+              message: "Password must be at least 8 characters!",
+            },
+          ]}
+          hasFeedback
+        >
+          <Input.Password
+            prefix={<LockOutlined className="site-form-item-icon" />}
+            type="password"
+            placeholder="Password"
+          />
+        </Form.Item>
+        <Form.Item
+          name="confirm"
+          dependencies={["password"]}
+          hasFeedback
+          rules={[
+            {
+              required: true,
+              message: "Please confirm your password!",
+            },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue("password") === value) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(
+                  new Error("The new password that you entered do not match!")
+                );
+              },
+            }),
+          ]}
+        >
+          <Input.Password
+            prefix={<LockOutlined className="site-form-item-icon" />}
+            placeholder="Confirm Password"
+          />
+        </Form.Item>
+
+        <Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="login-form-button"
+          >
+            Sign up
+          </Button>
+        </Form.Item>
+        <Form.Item className="signup__txt">
+          Already have an account? <Link to={"/login"}>Log in</Link>
+        </Form.Item>
+      </Form>
     </div>
   );
 };
 
-export default SignUp;
+export default Signup;
