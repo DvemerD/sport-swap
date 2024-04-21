@@ -1,7 +1,11 @@
+import ProductList from "../../components/productList/ProductList";
+
 const CatalogPage = () => {
-  return <div>
-    hrllo
-  </div>;
+  return (
+    <div>
+      <ProductList />
+    </div>
+  );
 };
 
 export default CatalogPage;
