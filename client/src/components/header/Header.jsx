@@ -1,4 +1,5 @@
-import { Breadcrumb, Layout, Menu, theme } from "antd";
+import { Layout, Menu, Avatar } from "antd";
+import { UserOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import logoIcon from "../../assets/logo.png";
 
@@ -29,6 +30,14 @@ const Header = () => {
           </Menu.Item>
           <Menu.Item key="2">
             <Link to="/login">Log in</Link>
+          </Menu.Item>
+          <Menu.Item key="3">
+            <Link to="/login">Log out</Link>
+          </Menu.Item>
+          <Menu.Item key="4">
+            <Link to="/profile">
+              <Avatar size={44} icon={<UserOutlined />} />
+            </Link>
           </Menu.Item>
         </Menu>
       </Layout.Header>

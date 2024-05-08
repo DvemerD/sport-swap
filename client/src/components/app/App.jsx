@@ -5,6 +5,7 @@ import LoginPage from "../../pages/loginPage/LoginPage";
 import SignupPage from "../../pages/signupPage/SignupPage";
 import CatalogPage from "../../pages/catalogPage/CatalogPage";
 import Header from "../header/Header";
+import ProfilePage from "../../pages/profilePage/ProfilePage";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Routes>
           {/* <Route element={<PrivateRoutes />}> */}
           <Route exact path="/" element={<CatalogPage />} />
+          <Route exact path="/profile" element={<ProfilePage />} />
           {/* </Route> */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
