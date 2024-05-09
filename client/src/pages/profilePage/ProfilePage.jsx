@@ -1,17 +1,29 @@
 import { useState } from "react";
-import { Form, Select, Typography, Space, Input, Button } from "antd";
+import { Form, Select, Typography, Space, Input, Button, message } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { useCreateProductMutation } from "../../redux/api/productApi";
 const { Title } = Typography;
 const fieldNames = [
-  {name: "hourly_rate", label: "Hourly Rate"},
-  {name: "daily_rate", label: "Daily Rate"},
-  {name: "monthly_rate", label: "Monthly Rate"},
-  {name: "cleaning_fee", label: "Cleaning Fee"},
+  { name: "hourly_rate", label: "Hourly Rate" },
+  { name: "daily_rate", label: "Daily Rate" },
+  { name: "monthly_rate", label: "Monthly Rate" },
+  { name: "cleaning_fee", label: "Cleaning Fee" },
 ];
 
 const ProfilePage = () => {
+  const [createProduct, { isLoading, isError }] = useCreateProductMutation();
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const error = () => {
+    messageApi.open({
+      type: 'error',
+      content: 'This is an error message',
+    });
+  };
+  
   return (
     <div>
+
       <Form
         name="equipment_form"
         className="equipment"
@@ -21,7 +33,29 @@ const ProfilePage = () => {
           pricing: [],
         }}
         onFinish={(values) => {
-          console.log(values);
+          createProduct({
+            user: 1,
+            title: "bike",
+            category: {
+              id: 1,
+              category_name: "Bike",
+              image:
+                "http://127.0.0.1:8000/media/img_category/room_by_arsenixc_d9tyf2k.jpg",
+            },
+            description: "bike",
+            image: [
+              {
+                id: 1,
+                url: "http://127.0.0.1:8000/media/sci-fi-city-red-moon-minimalist-minimalism-y7219.jpg",
+              },
+            ],
+            location_product: {
+              id: 1,
+              location: "Kharkiv",
+            },
+            price: 100.0,
+            active: true
+          }).unwrap();
         }}
       >
         <Title level={2} className="equipment__title">
@@ -79,50 +113,14 @@ const ProfilePage = () => {
             ]}
           />
         </Form.Item>
-
-        <Form.List name="pricing">
-          {(fields, { add, remove }) => (
-            <>
-              {fields.map((field, index) => (
-                <Space
-                  key={index}
-                  style={{
-                    display: "flex",
-                    alignItems: "center"
-                  }}
-                  align="baseline"
-                >
-                  <Form.Item
-                    {...field}
-                    label={fieldNames[index].label}
-                    name={[field.name, fieldNames[index].name]}
-                    // fieldKey={[field.fieldKey, fieldNames[index].name]}
-                    rules={[{ required: true, message: "Please set pricing!" }]}
-                  >
-                    <Input prefix={"$"} />
-                  </Form.Item>
-                  <MinusCircleOutlined onClick={() => remove(field.name)} />
-                </Space>
-              ))}
-              <Form.Item>
-                <Button
-                  type="dashed"
-                  onClick={() => add()}
-                  block
-                  icon={<PlusOutlined />}
-                >
-                  Add Rate
-                </Button>
-              </Form.Item>
-            </>
-          )}
-        </Form.List>
+        <Form.Item name="pricing"></Form.Item>
 
         <Form.Item>
           <Button
             type="primary"
             htmlType="submit"
             className="equipment__button"
+            disabled={isLoading}
           >
             Create
           </Button>

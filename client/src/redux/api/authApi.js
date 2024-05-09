@@ -6,16 +6,16 @@ export const authApi = createApi({
     baseUrl: `${import.meta.env.VITE_SERVER_URL}`,
   }),
   endpoints: (builder) => ({
-    signin: builder.mutation({
+    signup: builder.mutation({
       query: (payload) => ({
-        url: "signin",
+        url: "user/register/",
         method: "POST",
         body: payload,
       }),
     }),
     login: builder.mutation({
       query: (payload) => ({
-        url: "login",
+        url: "token/",
         method: "POST",
         body: payload,
       }),
@@ -23,4 +23,4 @@ export const authApi = createApi({
   }),
 });
 
-export const { useSigninMutation, useLoginMutation } = authApi;
+export const { useSignupMutation, useLoginMutation } = authApi;

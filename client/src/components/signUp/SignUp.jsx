@@ -1,16 +1,49 @@
+import { useSignupMutation } from "../../redux/api/authApi";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setHideHeader } from "../../redux/slices/headerSlice";
 import { LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, message } from "antd";
 import Title from "antd/es/typography/Title";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import "./signup.scss";
 
 const Signup = () => {
+  const [signup, { isLoading, isError, error }] = useSignupMutation();
+  const [messageApi, contextHolder] = message.useMessage();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    dispatch(setHideHeader(true));
+    return () => {
+      dispatch(setHideHeader(false));
+    };
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (isError) {
+      messageApi.open({
+        type: "error",
+        content: `Status: ${error.status}. ${JSON.stringify(
+          error.data,
+          null,
+          2
+        )}`,
+      });
+    }
+  }, [isError, error, messageApi]);
+
   const onFinish = (values) => {
-    console.log("Received values of form: ", values);
+    signup(values).then((res) => {
+      navigate("/login");
+    });
   };
+
   return (
     <div className="signup">
+      {contextHolder}
       <Form
         name="normal_login"
         className="signup__form"
@@ -57,6 +90,36 @@ const Signup = () => {
           />
         </Form.Item>
         <Form.Item
+          name="first_name"
+          rules={[
+            {
+              required: true,
+              message: "Please input your First Name!",
+            },
+          ]}
+          hasFeedback
+        >
+          <Input
+            prefix={<UserOutlined className="site-form-item-icon" />}
+            placeholder="First Name"
+          />
+        </Form.Item>
+        <Form.Item
+          name="last_name"
+          rules={[
+            {
+              required: true,
+              message: "Please input your Last Name!",
+            },
+          ]}
+          hasFeedback
+        >
+          <Input
+            prefix={<UserOutlined className="site-form-item-icon" />}
+            placeholder="Last Name"
+          />
+        </Form.Item>
+        <Form.Item
           name="password"
           rules={[
             {
@@ -77,7 +140,7 @@ const Signup = () => {
           />
         </Form.Item>
         <Form.Item
-          name="confirm"
+          name="password2"
           dependencies={["password"]}
           hasFeedback
           rules={[
@@ -108,6 +171,7 @@ const Signup = () => {
             type="primary"
             htmlType="submit"
             className="login-form-button"
+            loading={isLoading}
           >
             Sign up
           </Button>

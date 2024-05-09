@@ -13,10 +13,10 @@ function App() {
       <Layout>
         <Header />
         <Routes>
-          {/* <Route element={<PrivateRoutes />}> */}
           <Route exact path="/" element={<CatalogPage />} />
-          <Route exact path="/profile" element={<ProfilePage />} />
-          {/* </Route> */}
+          <Route element={<PrivateRoutes />}>
+            <Route exact path="/profile" element={<ProfilePage />} />
+          </Route>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
         </Routes>

@@ -1,16 +1,57 @@
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setSession } from "../../redux/slices/authSlice";
+import { useNavigate } from 'react-router-dom';
+import { setHideHeader } from "../../redux/slices/headerSlice";
 import { LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, message } from "antd";
 import Title from "antd/es/typography/Title";
 import { Link } from "react-router-dom";
+import { useLoginMutation } from "../../redux/api/authApi";
 
 import "./login.scss";
 
+
 const Login = () => {
+  const [login, { isLoading, isError, error }] = useLoginMutation();
+  const [messageApi, contextHolder] = message.useMessage();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    dispatch(setHideHeader(true));
+    return () => {
+      dispatch(setHideHeader(false));
+    };
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (isError) {
+      messageApi.open({
+        type: 'error',
+        content: `Status: ${error.status}. ${error.data.detail}`,
+      });
+    }
+  }, [isError, error, messageApi]);
+
   const onFinish = (values) => {
-    console.log("Received values of form: ", values);
+    login(values)
+      .then((res) => {
+        dispatch(
+          setSession({
+            token: res.data.access,
+          })
+        );
+        navigate("/")
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
+
   return (
     <div className="login">
+      {contextHolder}
       <Form
         name="normal_login"
         className="login__form"
@@ -23,21 +64,18 @@ const Login = () => {
           Log In
         </Title>
         <Form.Item
-          name="email"
+          name="username"
           rules={[
             {
-              type: "email",
-              message: "The input is not valid E-mail!",
-            },
-            {
               required: true,
-              message: "Please input your E-mail!",
+              message: "Please input your Username!",
             },
           ]}
+          hasFeedback
         >
           <Input
-            prefix={<MailOutlined className="site-form-item-icon" />}
-            placeholder="Email"
+            prefix={<UserOutlined className="site-form-item-icon" />}
+            placeholder="Username"
           />
         </Form.Item>
         <Form.Item
@@ -64,6 +102,7 @@ const Login = () => {
             type="primary"
             htmlType="submit"
             className="login-form-button"
+            loading={isLoading}
           >
             Log in
           </Button>
