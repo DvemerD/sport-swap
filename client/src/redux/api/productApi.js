@@ -5,15 +5,21 @@ export const productApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `${import.meta.env.VITE_SERVER_URL}`,
   }),
+  tagTypes: ['Products'],
   endpoints: (builder) => ({
+    getProducts: builder.query({
+      query: () => "products/",
+      providesTags: ['Products']
+    }),
     createProduct: builder.mutation({
       query: (payload) => ({
         url: "products/",
         method: "POST",
         body: payload,
       }),
+      invalidatesTags: ['Products']
     }),
   }),
 });
 
-export const { useCreateProductMutation } = productApi;
+export const { useCreateProductMutation, useGetProductsQuery } = productApi;

@@ -10,7 +10,7 @@ import ProfilePage from "../../pages/profilePage/ProfilePage";
 function App() {
   return (
     <BrowserRouter>
-      <Layout>
+      <Layout style={{minHeight: "100vh"}}>
         <Header />
         <Routes>
           <Route exact path="/" element={<CatalogPage />} />
