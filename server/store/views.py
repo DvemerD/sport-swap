@@ -22,4 +22,4 @@ class ListCategory(ListAPIView):
 class ProductsView(ModelViewSet):
     queryset = Product.objects.filter(active=True)
     serializer_class = ProductSerializer
-    permission_classes = [IsAuthenticatedOrCreateOnly]
+    # permission_classes = [IsAuthenticatedOrCreateOnly]
