@@ -1,10 +1,10 @@
 import { Col, Card, Drawer, Space, Button } from "antd";
 import { useState } from "react";
 import ProductInfo from "../productInfo/ProductInfo";
-import bikeImg from "../../assets/bike.png";
 
 const ProductItem = ({ data }) => {
   const [open, setOpen] = useState(false);
+  
   return (
     <>
       <Col xs={24} sm={12} md={8} lg={6} xl={6}>
@@ -20,7 +20,7 @@ const ProductItem = ({ data }) => {
           onClick={() => setOpen(true)}
         >
           <Card.Meta title={data.title} description={`Price: ${data.price}$`} />
-          <p>User: {data.user}</p>
+          <p>User: {data.username}</p>
           <p>Location: {data.location_product.location}</p>
         </Card>
       </Col>

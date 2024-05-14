@@ -5,11 +5,13 @@ export const productApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `${import.meta.env.VITE_SERVER_URL}`,
   }),
-  tagTypes: ['Products'],
+  tagTypes: ["Products", "Category", "Location"],
   endpoints: (builder) => ({
     getProducts: builder.query({
-      query: () => "products/",
-      providesTags: ['Products']
+      query: (search) => ({
+        url: "products/",
+        params: { search },
+      }),
     }),
     createProduct: builder.mutation({
       query: (payload) => ({
@@ -17,9 +19,27 @@ export const productApi = createApi({
         method: "POST",
         body: payload,
       }),
-      invalidatesTags: ['Products']
+      invalidatesTags: ["Products"],
+    }),
+    getCategory: builder.query({
+      query: () => "get_category/",
+      providesTags: ["Category"],
+    }),
+    getLocation: builder.query({
+      query: () => "get_city/",
+      providesTags: ["Location"],
+    }),
+    getUser: builder.query({
+      query: () => "current_user/",
     }),
   }),
 });
 
-export const { useCreateProductMutation, useGetProductsQuery } = productApi;
+export const {
+  useCreateProductMutation,
+  useGetProductsQuery,
+  // useGetSearchProductsMutation,
+  useGetCategoryQuery,
+  useGetLocationQuery,
+  useGetUserQuery,
+} = productApi;

@@ -1,15 +1,32 @@
-import { useEffect } from "react";
-import { useGetProductsQuery } from "../../redux/api/productApi";
-import { Row, Spin, Flex, message } from "antd";
+import { useEffect, useState } from "react";
+import {
+  useGetCategoryQuery,
+  useGetProductsQuery,
+} from "../../redux/api/productApi";
+import { Row, Spin, Flex, message, Radio, Tabs } from "antd";
 import ProductItem from "../productItem/ProductItem";
+import Search from "../search/Search";
+import logoIcon from "../../assets/logo.png";
 
 import "./productList.scss";
 
 const ProductList = () => {
-  const { data = [], error, isError, isLoading } = useGetProductsQuery();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeTab, setActiveTab] = useState("0");
   const [messageApi, contextHolder] = message.useMessage();
-
-  console.log(data);
+  const {
+    data: products = [],
+    error,
+    isError,
+    isLoading,
+    isFetching,
+  } = useGetProductsQuery(searchTerm);
+  const {
+    data: category = [],
+    isLoading: isLoadingCategory,
+    isError: isErrorCategory,
+    error: errorCategory,
+  } = useGetCategoryQuery();
 
   useEffect(() => {
     if (isError) {
@@ -24,21 +41,27 @@ const ProductList = () => {
     }
   }, [isError, error, messageApi]);
 
-  if (isLoading) {
+  const handleTabChange = (value) => {
+    setActiveTab(value);
+  };
+
+  if (isLoading || isFetching) {
     return (
-      <Flex gap="small" vertical>
-        <Flex gap="small" justify="center">
-          <Spin tip="Loading" size="large">
-            <div
-              style={{
-                padding: 50,
-                background: "rgba(0, 0, 0, 0.09)",
-                borderRadius: 4,
-              }}
-            ></div>
-          </Spin>
+      <div>
+        <Flex gap="small" vertical>
+          <Flex gap="small" justify="center">
+            <Spin tip="Loading" size="large">
+              <div
+                style={{
+                  padding: 50,
+                  background: "rgba(0, 0, 0, 0.09)",
+                  borderRadius: 4,
+                }}
+              ></div>
+            </Spin>
+          </Flex>
         </Flex>
-      </Flex>
+      </div>
     );
   }
 
@@ -46,8 +69,63 @@ const ProductList = () => {
     <>
       {contextHolder}
       <div className="products">
+        <Flex
+          gap="small"
+          justify="space-between"
+          wrap="wrap"
+          style={{ marginBottom: "20px" }}
+        >
+          <Search setSearchTerm={setSearchTerm} />
+          <Tabs
+            defaultActiveKey="0"
+            tabPosition="top"
+            style={{
+              width: "100%",
+            }}
+            onChange={handleTabChange}
+          >
+            <Tabs.TabPane
+              tab={
+                <Flex
+                  justify="center"
+                  align="center"
+                  gap="small"
+                  style={{ flexDirection: "column" }}
+                >
+                  <img
+                    height={25}
+                    src={logoIcon}
+                    style={{ filter: "grayscale(1)" }}
+                  />
+                  All
+                </Flex>
+              }
+              key={0}
+            ></Tabs.TabPane>
+            {category.map((item) => (
+              <Tabs.TabPane
+                tab={
+                  <Flex
+                    justify="center"
+                    align="center"
+                    gap="small"
+                    style={{ flexDirection: "column" }}
+                  >
+                    <img
+                      height={25}
+                      src={item.image}
+                      style={{ filter: "grayscale(1)" }}
+                    />
+                    {item.category_name}
+                  </Flex>
+                }
+                key={item.id}
+              ></Tabs.TabPane>
+            ))}
+          </Tabs>
+        </Flex>
         <Row gutter={[16, 16]}>
-          {data.map((item, i) => (
+          {products.results.map((item, i) => (
             <ProductItem key={i} data={item} />
           ))}
         </Row>
