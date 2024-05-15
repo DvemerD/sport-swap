@@ -8,18 +8,10 @@ export const productApi = createApi({
   tagTypes: ["Products", "Category", "Location"],
   endpoints: (builder) => ({
     getProducts: builder.query({
-      query: (search) => ({
+      query: ({ search, filter }) => ({
         url: "products/",
-        params: { search },
+        params: { search, category__category_name: filter },
       }),
-    }),
-    createProduct: builder.mutation({
-      query: (payload) => ({
-        url: "products/",
-        method: "POST",
-        body: payload,
-      }),
-      invalidatesTags: ["Products"],
     }),
     getCategory: builder.query({
       query: () => "get_category/",
@@ -32,9 +24,5 @@ export const productApi = createApi({
   }),
 });
 
-export const {
-  useCreateProductMutation,
-  useGetProductsQuery,
-  useGetCategoryQuery,
-  useGetLocationQuery,
-} = productApi;
+export const { useGetProductsQuery, useGetCategoryQuery, useGetLocationQuery } =
+  productApi;

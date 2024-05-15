@@ -1,5 +1,5 @@
-import { fetchBaseQuery } from "@reduxjs/toolkit/query";
-import { removeSession } from "../../features/authSlice";
+import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { removeSession } from "../../slices/authSlice";
 
 const baseQueryWithReauth = (baseUrl) => async (args, api, extraOptions) => {
   let result = await fetchBaseQuery({

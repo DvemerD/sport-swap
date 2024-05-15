@@ -9,8 +9,9 @@ const Search = ({ setSearchTerm }) => {
     <Input.Search
       placeholder="Enter text to search"
       onSearch={handleSearch}
-      style={{width: "300px"}}
+      style={{width: "355px", minWidth: "150px"}}
     ></Input.Search>
+    
   );
 };
 

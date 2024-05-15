@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
+import { useCreateProductMutation } from "../../redux/api/userApi";
 import {
-  useCreateProductMutation,
   useGetCategoryQuery,
   useGetLocationQuery,
 } from "../../redux/api/productApi";
@@ -17,6 +17,7 @@ import {
   Image,
   Upload,
 } from "antd";
+
 const { Title } = Typography;
 
 const ProfilePage = () => {

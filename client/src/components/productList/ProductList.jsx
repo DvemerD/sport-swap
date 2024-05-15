@@ -1,32 +1,19 @@
 import { useEffect, useState } from "react";
-import {
-  useGetCategoryQuery,
-  useGetProductsQuery,
-} from "../../redux/api/productApi";
-import { Row, Spin, Flex, message, Radio, Tabs } from "antd";
-import ProductItem from "../productItem/ProductItem";
-import Search from "../search/Search";
-import logoIcon from "../../assets/logo.png";
+import { useGetProductsQuery } from "../../redux/api/productApi";
+import { Row, Spin, Flex, message } from "antd";
 
 import "./productList.scss";
+import ProductItem from "../productItem/ProductItem";
 
-const ProductList = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [activeTab, setActiveTab] = useState("0");
+const ProductList = ({ searchTerm, activeTab }) => {
   const [messageApi, contextHolder] = message.useMessage();
   const {
-    data: products = [],
+    data: products = { results: [] },
     error,
     isError,
     isLoading,
     isFetching,
-  } = useGetProductsQuery(searchTerm);
-  const {
-    data: category = [],
-    isLoading: isLoadingCategory,
-    isError: isErrorCategory,
-    error: errorCategory,
-  } = useGetCategoryQuery();
+  } = useGetProductsQuery({ search: searchTerm, filter: activeTab });
 
   useEffect(() => {
     if (isError) {
@@ -40,10 +27,6 @@ const ProductList = () => {
       });
     }
   }, [isError, error, messageApi]);
-
-  const handleTabChange = (value) => {
-    setActiveTab(value);
-  };
 
   if (isLoading || isFetching) {
     return (
@@ -72,58 +55,10 @@ const ProductList = () => {
         <Flex
           gap="small"
           justify="space-between"
-          wrap="wrap"
+          align="center"
+          wrap="wrap-reverse"
           style={{ marginBottom: "20px" }}
-        >
-          <Search setSearchTerm={setSearchTerm} />
-          <Tabs
-            defaultActiveKey="0"
-            tabPosition="top"
-            style={{
-              width: "100%",
-            }}
-            onChange={handleTabChange}
-          >
-            <Tabs.TabPane
-              tab={
-                <Flex
-                  justify="center"
-                  align="center"
-                  gap="small"
-                  style={{ flexDirection: "column" }}
-                >
-                  <img
-                    height={25}
-                    src={logoIcon}
-                    style={{ filter: "grayscale(1)" }}
-                  />
-                  All
-                </Flex>
-              }
-              key={0}
-            ></Tabs.TabPane>
-            {category.map((item) => (
-              <Tabs.TabPane
-                tab={
-                  <Flex
-                    justify="center"
-                    align="center"
-                    gap="small"
-                    style={{ flexDirection: "column" }}
-                  >
-                    <img
-                      height={25}
-                      src={item.image}
-                      style={{ filter: "grayscale(1)" }}
-                    />
-                    {item.category_name}
-                  </Flex>
-                }
-                key={item.id}
-              ></Tabs.TabPane>
-            ))}
-          </Tabs>
-        </Flex>
+        ></Flex>
         <Row gutter={[16, 16]}>
           {products.results.map((item, i) => (
             <ProductItem key={i} data={item} />
