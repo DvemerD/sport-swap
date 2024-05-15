@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setSession } from "../../redux/slices/authSlice";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { setHideHeader } from "../../redux/slices/headerSlice";
 import { LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input, message } from "antd";
@@ -10,7 +10,6 @@ import { Link } from "react-router-dom";
 import { useLoginMutation } from "../../redux/api/authApi";
 
 import "./login.scss";
-
 
 const Login = () => {
   const [login, { isLoading, isError, error }] = useLoginMutation();
@@ -28,7 +27,7 @@ const Login = () => {
   useEffect(() => {
     if (isError) {
       messageApi.open({
-        type: 'error',
+        type: "error",
         content: `Status: ${error.status}. ${error.data.detail}`,
       });
     }
@@ -42,7 +41,7 @@ const Login = () => {
             token: res.data.access,
           })
         );
-        navigate("/")
+        navigate("/");
       })
       .catch((err) => {
         console.log(err);
@@ -68,14 +67,14 @@ const Login = () => {
           rules={[
             {
               required: true,
-              message: "Please input your Username!",
+              message: "Please input your username or email!",
             },
           ]}
           hasFeedback
         >
           <Input
             prefix={<UserOutlined className="site-form-item-icon" />}
-            placeholder="Username"
+            placeholder="Username or Email"
           />
         </Form.Item>
         <Form.Item

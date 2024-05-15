@@ -2,10 +2,16 @@ import { useSignupMutation } from "../../redux/api/authApi";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setHideHeader } from "../../redux/slices/headerSlice";
-import { LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  LockOutlined,
+  MailOutlined,
+  PhoneOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import { Button, Form, Input, message } from "antd";
 import Title from "antd/es/typography/Title";
 import { Link, useNavigate } from "react-router-dom";
+import { setSession } from "../../redux/slices/authSlice";
 
 import "./signup.scss";
 
@@ -36,9 +42,18 @@ const Signup = () => {
   }, [isError, error, messageApi]);
 
   const onFinish = (values) => {
-    signup(values).then((res) => {
-      navigate("/login");
-    });
+    signup(values)
+      .then((res) => {
+        dispatch(
+          setSession({
+            token: res.data.access,
+          })
+        );
+        navigate("/");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -120,6 +135,21 @@ const Signup = () => {
           />
         </Form.Item>
         <Form.Item
+          name="phone_number"
+          rules={[
+            {
+              required: true,
+              message: "Please input your Phone Number!",
+            },
+          ]}
+          hasFeedback
+        >
+          <Input
+            prefix={<PhoneOutlined className="site-form-item-icon" />}
+            placeholder="Phone Number"
+          />
+        </Form.Item>
+        <Form.Item
           name="password"
           rules={[
             {
@@ -129,6 +159,11 @@ const Signup = () => {
             {
               min: 8,
               message: "Password must be at least 8 characters!",
+            },
+            {
+              pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
+              message:
+                "The password must contain an uppercase letter, a lowercase letter and a number!",
             },
           ]}
           hasFeedback

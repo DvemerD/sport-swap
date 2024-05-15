@@ -55,7 +55,7 @@ const ProductInfo = ({ data, open, setOpen }) => {
     <>
       <Drawer
         className="drawer"
-        title="Drawer with extra actions"
+        title={data.title}
         placement="right"
         width={620}
         onClose={onClose}
@@ -90,6 +90,8 @@ const ProductInfo = ({ data, open, setOpen }) => {
                 </div>
               ))}
             </Carousel>
+            <p style={{padding: "10px 0 "}}>Description:</p>
+            <p style={{paddingBottom: "15px"}}>{data.description}</p>
             <Form
               className="drawer__space"
               layout="vertical"

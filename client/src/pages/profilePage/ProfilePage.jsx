@@ -58,11 +58,12 @@ const ProfilePage = () => {
           layout="vertical"
           initialValues={{
             remember: true,
-            pricing: [],
+            pricing: "",
             description: "",
             images: "",
             title: "",
             category: "",
+            location: "",
           }}
           onFinish={(values) => {
             const images = values.images.fileList.map(
@@ -87,8 +88,17 @@ const ProfilePage = () => {
             for (const value of images) {
               formData.append("image", value);
             }
-            
-            createProduct(formData).unwrap();
+
+            createProduct(formData)
+              .then((res) => {
+                messageApi.open({
+                  type: "success",
+                  content: "Product created successfully!",
+                });
+              })
+              .catch((err) => {
+                console.log(err);
+              });
           }}
         >
           <Title level={2} className="equipment__title">

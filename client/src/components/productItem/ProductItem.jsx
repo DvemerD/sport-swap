@@ -14,13 +14,13 @@ const ProductItem = ({ data }) => {
             <img
               alt={`image ${data.title}`}
               src={data.image[0].url}
-              style={{ maxHeight: "240px", objectFit: "cover" }}
+              style={{ height: "240px", objectFit: "cover" }}
             />
           }
           onClick={() => setOpen(true)}
         >
           <Card.Meta title={data.title} description={`Price: ${data.price}$`} />
-          <p>User: {data.username}</p>
+          <p>User: {data.user.username}</p>
           <p>Location: {data.location_product.location}</p>
         </Card>
       </Col>

@@ -29,17 +29,12 @@ export const productApi = createApi({
       query: () => "get_city/",
       providesTags: ["Location"],
     }),
-    getUser: builder.query({
-      query: () => "current_user/",
-    }),
   }),
 });
 
 export const {
   useCreateProductMutation,
   useGetProductsQuery,
-  // useGetSearchProductsMutation,
   useGetCategoryQuery,
   useGetLocationQuery,
-  useGetUserQuery,
 } = productApi;
