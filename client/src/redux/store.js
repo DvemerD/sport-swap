@@ -19,5 +19,5 @@ export const store = configureStore({
     getDefaultMiddleware().concat(
       ...[authApi.middleware, productApi.middleware, userApi.middleware]
     ),
-  devTools: import.meta.env.VITE_DEV_MODE !== "production",
+  devTools: process.env.VITE_DEV_MODE !== "production",
 });

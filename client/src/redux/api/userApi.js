@@ -3,7 +3,7 @@ import baseQueryWithReauth from "./query/baseQuery";
 
 export const userApi = createApi({
   reducerPath: "user",
-  baseQuery: baseQueryWithReauth(import.meta.env.VITE_SERVER_URL),
+  baseQuery: baseQueryWithReauth(process.env.VITE_SERVER_URL),
   endpoints: (builder) => ({
     getUser: builder.query({
       query: () => "current_user/",
@@ -14,7 +14,6 @@ export const userApi = createApi({
         method: "POST",
         body: payload,
       }),
-      // invalidatesTags: ["Products"],
     }),
   }),
 });

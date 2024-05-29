@@ -9,15 +9,15 @@ import {
   Result,
 } from "antd";
 import { RightOutlined, LeftOutlined } from "@ant-design/icons";
-import bikeImg from "../../assets/bike.png";
-import bike2Img from "../../assets/bike-2.jpg";
 
 import "./productInfo.scss";
+import Chat from "../chat/Chat";
 
 const ProductInfo = ({ data, open, setOpen }) => {
   const [dates, setDates] = useState([]);
   const [days, setDays] = useState(0);
   const [showResult, setShowResult] = useState(false);
+  const [openChat, setOpenChat] = useState(false);
 
   const onClose = () => {
     setOpen(false);
@@ -53,6 +53,7 @@ const ProductInfo = ({ data, open, setOpen }) => {
 
   return (
     <>
+      {openChat && <Chat openChat={openChat} setOpenChat={setOpenChat}/>}
       <Drawer
         className="drawer"
         title={data.title}
@@ -90,8 +91,8 @@ const ProductInfo = ({ data, open, setOpen }) => {
                 </div>
               ))}
             </Carousel>
-            <p style={{padding: "10px 0 "}}>Description:</p>
-            <p style={{paddingBottom: "15px"}}>{data.description}</p>
+            <p style={{ padding: "10px 0 " }}>Description:</p>
+            <p style={{ paddingBottom: "15px" }}>{data.description}</p>
             <Form
               className="drawer__space"
               layout="vertical"
@@ -133,6 +134,14 @@ const ProductInfo = ({ data, open, setOpen }) => {
                 </p>
               </Form.Item>
               <Form.Item>
+                <Button
+                  className="drawer__button"
+                  type="primary"
+                  htmlType="button"
+                  onClick={() => setOpenChat(true)}
+                >
+                  Chat
+                </Button>
                 <Button
                   className="drawer__button"
                   type="primary"

@@ -52,13 +52,6 @@ const ProductList = ({ searchTerm, activeTab }) => {
     <>
       {contextHolder}
       <div className="products">
-        <Flex
-          gap="small"
-          justify="space-between"
-          align="center"
-          wrap="wrap-reverse"
-          style={{ marginBottom: "20px" }}
-        ></Flex>
         <Row gutter={[16, 16]}>
           {products.results.map((item, i) => (
             <ProductItem key={i} data={item} />

@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
+import { useEffect } from "react";
+import { UploadOutlined } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
 import { useCreateProductMutation } from "../../redux/api/userApi";
 import {
@@ -14,7 +14,6 @@ import {
   Input,
   Button,
   message,
-  Image,
   Upload,
 } from "antd";
 
