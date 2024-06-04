@@ -1,20 +1,22 @@
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.generics import ListAPIView
-from rest_framework.permissions import AllowAny
+from rest_framework.generics import ListAPIView, CreateAPIView
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
 from .permission import IsAuthenticatedOrCreateOnly
-from server.pagination import Pagination
+from store.pagination import Pagination
 from .models import (
     Product,
     Category,
-    City
+    City,
+    Order
 )
 from .serializer import (
     ProductSerializer,
     ProductCreateSerializer,
     CategorySerializer,
-    CitySerializer
+    CitySerializer,
+    OrderSerializer
 )
 
 
@@ -41,6 +43,16 @@ class ProductsView(ModelViewSet):
     permission_classes = [IsAuthenticatedOrCreateOnly]
 
     def get_serializer_class(self):
-        if self.action == 'create':
+        if self.action in ['create', 'update', 'destroy']:
             return ProductCreateSerializer
         return self.serializer_class
+    
+
+class OrderView(ListAPIView, CreateAPIView):
+    serializer_class = OrderSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user_id = self.request.user
+        queryset = Order.objects.filter(user=user_id.id, pay=True)
+        return queryset

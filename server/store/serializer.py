@@ -1,9 +1,11 @@
+from uuid import uuid4
 from rest_framework import serializers
 from .models import (
     Category,
     Product,
     Image,
-    City
+    City,
+    Order
 )
 from account.serializer import UserSerializer
 
@@ -23,7 +25,7 @@ class ImageSerializer(serializers.ModelSerializer):
 class CitySerializer(serializers.ModelSerializer):
     class Meta:
         model = City
-        fields = ['id', 'location']
+        fields = ('id', 'location')
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -53,4 +55,40 @@ class ProductCreateSerializer(serializers.ModelSerializer):
         return product
 
     def update(self, instance, validated_data):
-        pass
+        user_data = validated_data.pop('user', {})
+        product = Product.objects.filter(id=validated_data.get('id'))
+        category = Category.objects.filter(id=validated_data.get('category'))
+        city = City.objects.filter(id=validated_data.get('location_product'))
+
+        if product.user.id == user_data.get('id'):
+            instance.title = validated_data.get('title')
+            instance.description = validated_data.get('description')
+            if category:
+                instance.category = category
+            if city:
+                instance.location_product = city
+
+            instance.price = validated_data.get('price')
+            instance.active = validated_data.get('active')
+
+            instance.save()
+
+        return instance
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    unique_id = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = Order
+        fields = ['id', 'unique_id', 'user', 'product', 'start_date', 'end_date', 'pay', 'bill']
+
+    def create(self, validated_data):
+        order = Order.objects.create(unique_id=uuid4(), **validated_data)
+        product = Product.objects.get(title=validated_data.get('product'))
+
+        if order and product:
+            product.active = False
+            product.save()
+
+        return order
