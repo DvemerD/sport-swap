@@ -21,4 +21,13 @@
     flex: 1;
     justify-content: end;
   }
+
+  .ant-menu-item-selected {
+    background-color: transparent !important;
+    color: inherit !important;
+  }
+
+  a.active {
+    // background-color: red;
+  }
 }

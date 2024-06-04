@@ -53,7 +53,14 @@ const ProductInfo = ({ data, open, setOpen }) => {
 
   return (
     <>
-      {openChat && <Chat openChat={openChat} setOpenChat={setOpenChat}/>}
+      {openChat && (
+        <Chat
+          openChat={openChat}
+          setOpenChat={setOpenChat}
+          seller={data.user.id}
+          product={data.id}
+        />
+      )}
       <Drawer
         className="drawer"
         title={data.title}
@@ -139,6 +146,7 @@ const ProductInfo = ({ data, open, setOpen }) => {
                   type="primary"
                   htmlType="button"
                   onClick={() => setOpenChat(true)}
+                  style={{ marginBottom: 8 }}
                 >
                   Chat
                 </Button>

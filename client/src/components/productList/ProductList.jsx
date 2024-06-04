@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useGetProductsQuery } from "../../redux/api/productApi";
 import { Row, Spin, Flex, message } from "antd";
 
@@ -13,7 +13,12 @@ const ProductList = ({ searchTerm, activeTab }) => {
     isError,
     isLoading,
     isFetching,
-  } = useGetProductsQuery({ search: searchTerm, filter: activeTab });
+  } = useGetProductsQuery(
+    { search: searchTerm, filter: activeTab },
+    { refetchOnMountOrArgChange: true }
+  );
+
+  useEffect(() => {}, []);
 
   useEffect(() => {
     if (isError) {
