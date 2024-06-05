@@ -1,15 +1,13 @@
-import { Col, Card} from "antd";
+import { Col, Card } from "antd";
 import { useState } from "react";
-import ProductInfo from "../productInfo/ProductInfo";
 
-const ProductItem = ({ data }) => {
+const UserProductItem = () => {
   const [open, setOpen] = useState(false);
-  
+
   return (
     <>
       <Col xs={24} sm={12} md={8} lg={6} xl={6}>
         <Card
-          hoverable
           cover={
             <img
               alt={`image ${data.title}`}
@@ -24,9 +22,9 @@ const ProductItem = ({ data }) => {
           <p>Location: {data.location_product.location}</p>
         </Card>
       </Col>
-      <ProductInfo data={data} open={open} setOpen={setOpen} />
+      {/* <ProductInfo data={data} open={open} setOpen={setOpen} /> */}
     </>
   );
 };
 
-export default ProductItem;
+export default UserProductItem;

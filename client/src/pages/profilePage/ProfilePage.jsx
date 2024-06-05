@@ -2,6 +2,7 @@ import { Tabs } from "antd";
 import FormAnnouncement from "../../components/formAnnouncement/FormAnnouncement";
 import HistoryAnnouncement from "../../components/historyAnnouncement/HistoryAnnouncement";
 import ChatList from "../../components/chatList/ChatList";
+import EditUserInfo from "../../components/editUserInfo/EditUserInfo";
 const { TabPane } = Tabs;
 
 const ProfilePage = () => {
@@ -18,8 +19,8 @@ const ProfilePage = () => {
           <TabPane tab="Chats" key="3">
             {<ChatList />}
           </TabPane>
-          <TabPane tab="Tab 4" key="4">
-            Content of Tab 4
+          <TabPane tab="Edit user info" key="4">
+            {<EditUserInfo />}
           </TabPane>
           <TabPane tab="Tab 5" key="5">
             Content of Tab 5

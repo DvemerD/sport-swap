@@ -18,8 +18,6 @@ const ProductList = ({ searchTerm, activeTab }) => {
     { refetchOnMountOrArgChange: true }
   );
 
-  useEffect(() => {}, []);
-
   useEffect(() => {
     if (isError) {
       messageApi.open({

@@ -4,10 +4,19 @@ import baseQueryWithReauth from "./query/baseQuery";
 export const userApi = createApi({
   reducerPath: "user",
   baseQuery: baseQueryWithReauth(process.env.VITE_SERVER_URL),
-  tagTypes: ["Products"],
+  tagTypes: ["Products", "User"],
   endpoints: (builder) => ({
     getUser: builder.query({
       query: () => "current_user/",
+      providesTags: ["User"],
+    }),
+    changeUserInfo: builder.mutation({
+      query: (payload) => ({
+        url: "current_user/",
+        method: "PUT",
+        body: payload,
+      }),
+      invalidatesTags: ["User"],
     }),
     createProduct: builder.mutation({
       query: (payload) => ({
@@ -40,4 +49,5 @@ export const {
   useGetUserProductsQuery,
   useGetUserChatQuery,
   useGetChatMutation,
+  useChangeUserInfoMutation,
 } = userApi;

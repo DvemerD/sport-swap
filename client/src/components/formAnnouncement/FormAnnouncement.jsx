@@ -222,7 +222,7 @@ const FormAnnouncement = () => {
             type="primary"
             htmlType="submit"
             className="equipment__button"
-            disabled={isLoadingCreate}
+            loading={isLoadingCreate}
           >
             Create
           </Button>

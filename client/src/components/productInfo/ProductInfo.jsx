@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Chat from "../chat/Chat";
 import {
   Button,
   Carousel,
@@ -11,7 +12,7 @@ import {
 import { RightOutlined, LeftOutlined } from "@ant-design/icons";
 
 import "./productInfo.scss";
-import Chat from "../chat/Chat";
+
 
 const ProductInfo = ({ data, open, setOpen }) => {
   const [dates, setDates] = useState([]);

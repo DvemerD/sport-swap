@@ -1,3 +1,4 @@
+import { Card, Col, Row } from "antd";
 import { useGetUserProductsQuery } from "../../redux/api/userApi";
 
 const HistoryAnnouncement = () => {
@@ -7,8 +8,20 @@ const HistoryAnnouncement = () => {
     isLoading,
     isFetching,
   } = useGetUserProductsQuery();
+
   console.log(products);
-  return <>hello</>;
+
+  return (
+    <>
+      <div className="history">
+        {/* <Row gutter={[16, 16]}>
+          {products.map((item, i) => (
+            <UserProductItem key={i} data={item} />
+          ))}
+        </Row> */}
+      </div>
+    </>
+  );
 };
 
 export default HistoryAnnouncement;
