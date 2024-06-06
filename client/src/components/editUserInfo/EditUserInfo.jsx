@@ -21,10 +21,15 @@ const EditUserInfo = () => {
     const obj = {
       ...userData,
       ...values,
-      // avatar: values.avatar.fileList[0].originFileObj,
     };
+
     delete obj.id;
-    if (typeof values.avatar === "string") delete values.avatar;
+
+    if (typeof values.avatar === "string") {
+      delete obj.avatar;
+    } else {
+      obj.avatar = values.avatar.fileList[0].originFileObj;
+    }
 
     const formData = new FormData();
     for (const [key, value] of Object.entries(obj)) {
@@ -42,7 +47,9 @@ const EditUserInfo = () => {
 
   return (
     <Form form={form} layout="vertical" onFinish={handleSubmit}>
-      {/* {userData.avatar && <Avatar size={84} src={userData.avatar} />}
+      {userData.avatar && (
+        <Avatar size={150} src={`http://127.0.0.1:8000${userData.avatar}`} />
+      )}
       <Form.Item name="avatar">
         <Upload
           beforeUpload={(file) => {
@@ -55,13 +62,38 @@ const EditUserInfo = () => {
             });
           }}
         >
-          <Button icon={<UploadOutlined />}>Click to Upload</Button>
+          <Button icon={<UploadOutlined />} style={{ marginTop: 12 }}>
+            Click to Upload
+          </Button>
         </Upload>
-      </Form.Item> */}
-      <Form.Item label="Username" name="username">
+      </Form.Item>
+      <Form.Item
+        label="Username"
+        name="username"
+        rules={[
+          {
+            required: true,
+            message: "Please input your Username!",
+          },
+        ]}
+      >
         <Input name="username" value={userData.username} />
       </Form.Item>
-      <Form.Item label="Email" name="email">
+      <Form.Item
+        label="Email"
+        name="email"
+        rules={[
+          {
+            type: "email",
+            message: "The input is not valid Email!",
+          },
+          {
+            required: true,
+            message: "Please input your Email!",
+          },
+        ]}
+        hasFeedback
+      >
         <Input name="email" value={userData.email} />
       </Form.Item>
       <Form.Item label="First Name" name="first_name">
@@ -70,7 +102,12 @@ const EditUserInfo = () => {
       <Form.Item label="Last Name" name="last_name">
         <Input name="last_name" value={userData.last_name} />
       </Form.Item>
-      <Form.Item label="Phone number" name="phone_number">
+      <Form.Item
+        label="Phone number"
+        name="phone_number"
+        rules={[{ required: true, message: "Please input your phone number!" }]}
+        hasFeedback
+      >
         <Input name="phone_number" value={userData.phone_number} />
       </Form.Item>
       <Form.Item>
