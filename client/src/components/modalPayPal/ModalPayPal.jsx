@@ -11,6 +11,7 @@ const ModalPayPal = ({
   price,
   dates,
   productId,
+  setShowResult
 }) => {
   const [createOrder, { isLoading, error }] = useCreateOrderMutation();
   const { data: user = {} } = useGetUserQuery();
@@ -60,6 +61,7 @@ const ModalPayPal = ({
                   pay: true,
                 }).then((res) => {
                   setIsModalOpen(false);
+                  setShowResult(true);
                 });
               });
             }}

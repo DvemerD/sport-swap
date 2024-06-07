@@ -54,7 +54,6 @@ const ProductInfo = ({ data, open, setOpen }) => {
 
   const onFinish = (values) => {
     console.log("Received values of form: ", values);
-    setShowResult(true);
   };
 
   return (
@@ -179,6 +178,7 @@ const ProductInfo = ({ data, open, setOpen }) => {
           price={price}
           dates={dates}
           productId={data.id}
+          setShowResult={setShowResult}
         />
       )}
     </>

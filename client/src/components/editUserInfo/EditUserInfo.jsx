@@ -9,7 +9,16 @@ import { UploadOutlined } from "@ant-design/icons";
 const EditUserInfo = () => {
   const [form] = Form.useForm();
   const { data: userData, isFetching } = useGetUserQuery();
-  const [changeUserInfo, { isLoading, error }] = useChangeUserInfoMutation();
+  const [changeUserInfo, { isLoading, isError, error }] =
+    useChangeUserInfoMutation();
+
+  useEffect(() => {
+    if (isError && error) {
+      message.error(
+        `Failed to delete product: ${error.message || "Unknown error"}`
+      );
+    }
+  }, [isError, error]);
 
   useEffect(() => {
     if (userData && !isFetching) {
@@ -38,10 +47,10 @@ const EditUserInfo = () => {
 
     changeUserInfo(formData)
       .then((res) => {
-        // message.success("Data updated");
+        message.success("Data updated");
       })
       .catch((err) => {
-        message.success(err);
+        console.log(err);
       });
   };
 
