@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Chat from "../chat/Chat";
+import ModalPayPal from "../modalPayPal/ModalPayPal";
 import {
   Button,
   Carousel,
@@ -13,12 +14,13 @@ import { RightOutlined, LeftOutlined } from "@ant-design/icons";
 
 import "./productInfo.scss";
 
-
 const ProductInfo = ({ data, open, setOpen }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [dates, setDates] = useState([]);
   const [days, setDays] = useState(0);
   const [showResult, setShowResult] = useState(false);
   const [openChat, setOpenChat] = useState(false);
+  const [price, setPrice] = useState(0);
 
   const onClose = () => {
     setOpen(false);
@@ -28,6 +30,7 @@ const ProductInfo = ({ data, open, setOpen }) => {
     setDates(dates);
     const diffInDays = dates[1].diff(dates[0], "days");
     setDays(diffInDays);
+    setPrice(parseFloat(data.price * diffInDays).toFixed(2));
   };
 
   const NextArrow = ({ onClick }) => (
@@ -138,7 +141,7 @@ const ProductInfo = ({ data, open, setOpen }) => {
                   <span>
                     ${data.price} x {days} days
                   </span>{" "}
-                  <span>${(data.price * days).toFixed(2)}</span>
+                  <span>${price}</span>
                 </p>
               </Form.Item>
               <Form.Item>
@@ -152,9 +155,13 @@ const ProductInfo = ({ data, open, setOpen }) => {
                   Chat
                 </Button>
                 <Button
+                  disabled={!days}
                   className="drawer__button"
                   type="primary"
-                  htmlType="submit"
+                  htmlType="button"
+                  onClick={() => {
+                    setIsModalOpen(true);
+                  }}
                 >
                   Submit
                 </Button>
@@ -163,6 +170,15 @@ const ProductInfo = ({ data, open, setOpen }) => {
           </div>
         )}
       </Drawer>
+      {isModalOpen && (
+        <ModalPayPal
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          price={price}
+          dates={dates}
+          productId={data.id}
+        />
+      )}
     </>
   );
 };

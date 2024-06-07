@@ -6,56 +6,76 @@ import { useGetUserQuery } from "../../redux/api/userApi";
 const { TextArea } = Input;
 const { Text } = Typography;
 
-const ChatModal = ({ openChat, setOpenChat, seller, product }) => {
+const ChatModal = ({
+  openChat,
+  setOpenChat,
+  seller,
+  product,
+  client = false,
+  uniqueID = "",
+}) => {
   const [getChat, { isLoading, isError, error }] = useGetChatMutation();
   const { data: user = {} } = useGetUserQuery();
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState("");
-  const [uniqueId, setUniqueId] = useState("");
+  const [uniqueId, setUniqueId] = useState(uniqueID);
   const ws = useRef(null);
 
   useEffect(() => {
-    const chatObj = { seller, client: 3, product };
+    const chatObj = { seller, client: client || user.id, product };
 
     getChat(chatObj)
       .then((res) => {
-        console.log(res);
+        if (!res.data.unique_id) {
+          throw new Error(res.status);
+        } else {
+          initWebSocket(res.data.unique_id);
+        }
       })
       .catch((err) => {
         console.log(err);
       });
-    // ws.current = new WebSocket("ws://localhost:8000/ws/chat/823942/");
 
-    // ws.current.onopen = () => {
-    //   console.log("WebSocket Client Connected");
-    // };
-
-    // ws.current.onmessage = (data) => {
-    //   const dataParsed = JSON.parse(data.data);
-    //   setMessages((prevMessages) => [
-    //     ...prevMessages,
-    //     { text: dataParsed.message, time: new Date().toLocaleTimeString() },
-    //   ]);
-    // };
-
-    // ws.current.onclose = () => {
-    //   console.log("WebSocket Client Disconnected");
-    // };
-
-    // return () => {
-    //   ws.current.close();
-    // };
+    return () => {
+      if (ws.current) {
+        ws.current.close();
+      }
+    };
   }, []);
+
+  const initWebSocket = (uniqueId) => {
+    ws.current = new WebSocket(`ws://localhost:8000/ws/chat/${uniqueId}/`);
+
+    ws.current.onopen = (data) => {
+      console.log("WebSocket Client Connected");
+    };
+
+    ws.current.onmessage = (data) => {
+      const dataParsed = JSON.parse(data.data);
+      if (dataParsed.message_history) {
+        setMessages([...dataParsed.message_history]);
+      } else {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { text: dataParsed.message, user: dataParsed.user },
+        ]);
+      }
+    };
+
+    ws.current.onclose = () => {
+      console.log("WebSocket Client Disconnected");
+    };
+  };
 
   const handleSend = () => {
     if (inputValue.trim()) {
       ws.current.send(
-        JSON.stringify({ message: inputValue, room: 823942, user: 2 })
+        JSON.stringify({
+          message: inputValue,
+          room: uniqueId,
+          user: client || user.id,
+        })
       );
-      // setMessages([
-      //   ...messages,
-      //   { text: inputValue, time: new Date().toLocaleTimeString() },
-      // ]);
       setInputValue("");
     }
   };
@@ -74,7 +94,7 @@ const ChatModal = ({ openChat, setOpenChat, seller, product }) => {
           renderItem={(item) => (
             <List.Item>
               <Text>
-                {item.time} - {item.text}
+                {item.user} - {item.text}
               </Text>
             </List.Item>
           )}

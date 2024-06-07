@@ -40,6 +40,13 @@ export const userApi = createApi({
         body: payload,
       }),
     }),
+    createOrder: builder.mutation({
+      query: (payload) => ({
+        url: "order/",
+        method: "POST",
+        body: payload,
+      }),
+    }),
   }),
 });
 
@@ -50,4 +57,5 @@ export const {
   useGetUserChatQuery,
   useGetChatMutation,
   useChangeUserInfoMutation,
+  useCreateOrderMutation
 } = userApi;

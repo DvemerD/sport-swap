@@ -22,9 +22,6 @@ const ProfilePage = () => {
           <TabPane tab="Edit user info" key="4">
             {<EditUserInfo />}
           </TabPane>
-          <TabPane tab="Tab 5" key="5">
-            Content of Tab 5
-          </TabPane>
         </Tabs>
       </div>
     </>

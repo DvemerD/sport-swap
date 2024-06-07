@@ -10,12 +10,13 @@ class ChatConsumer(WebsocketConsumer):
     def connect(self):
         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
         self.room_group_name = "chat_%s" % self.room_name
-
+        print(self.room_name)
         async_to_sync(self.channel_layer.group_add)(
             self.room_group_name, self.channel_name
         )
 
         self.accept()
+        self.send_message_history()
 
     def disconnect(self, close_code):
         async_to_sync(self.channel_layer.group_discard)(
@@ -34,9 +35,26 @@ class ChatConsumer(WebsocketConsumer):
         Message.objects.create(user=user, room=room, content=message)
 
         async_to_sync(self.channel_layer.group_send)(
-            self.room_group_name, {"type": "chat_message", "message": message}
+            self.room_group_name, {
+                "type": "chat_message", "user": user_data, "room": room_id, "message": message
+                }
         )
     
     def chat_message(self, event):
-        message = event["message"]
-        self.send(text_data=json.dumps({"message": message}))
+        self.send(text_data=json.dumps({
+            "user": event["user"], "room": event["room"], "message": event["message"]
+            }))
+
+    def send_message_history(self):
+        messages = Message.objects.filter(room__unique_id=self.room_name)
+        print(messages)
+        message_list = []
+
+        for message in messages:
+            message_list.append({
+                "user": message.user.id,
+                "room": message.room.id,
+                "message": message.content,
+            })
+
+        self.send(text_data=json.dumps({"message_history": message_list}))

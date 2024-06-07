@@ -77,16 +77,16 @@ class ProductCreateSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    unique_id = serializers.CharField(read_only=True)
 
     class Meta:
         model = Order
         fields = ['id', 'unique_id', 'user', 'product', 'start_date', 'end_date', 'pay', 'bill']
+        read_only_fields = ['id', 'bill']
 
     def create(self, validated_data):
-        order = Order.objects.create(unique_id=uuid4(), **validated_data)
         product = Product.objects.get(title=validated_data.get('product'))
-
+        order = Order.objects.create(**validated_data)
+        
         if order and product:
             product.active = False
             product.save()
