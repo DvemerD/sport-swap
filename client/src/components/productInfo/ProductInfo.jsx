@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Chat from "../chat/Chat";
 import ModalPayPal from "../modalPayPal/ModalPayPal";
+import { useSelector } from "react-redux";
 import {
   Button,
   Carousel,
@@ -16,6 +17,7 @@ import "./productInfo.scss";
 
 const ProductInfo = ({ data, open, setOpen }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const token = useSelector((state) => state.auth.token);
   const [dates, setDates] = useState([]);
   const [days, setDays] = useState(0);
   const [showResult, setShowResult] = useState(false);
@@ -155,7 +157,7 @@ const ProductInfo = ({ data, open, setOpen }) => {
                   Chat
                 </Button>
                 <Button
-                  disabled={!days}
+                  disabled={!(!days && !token)}
                   className="drawer__button"
                   type="primary"
                   htmlType="button"

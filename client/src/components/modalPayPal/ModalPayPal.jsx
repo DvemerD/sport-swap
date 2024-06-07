@@ -14,15 +14,13 @@ const ModalPayPal = ({
 }) => {
   const [createOrder, { isLoading, error }] = useCreateOrderMutation();
   const { data: user = {} } = useGetUserQuery();
-  console.log(user);
+  
   const handleOk = () => {
     setIsModalOpen(false);
   };
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-
-  console.log(price, dates);
 
   return (
     <>

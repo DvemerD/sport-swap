@@ -48,14 +48,14 @@ const Header = () => {
             )}
             {token && (
               <>
-                <Menu.Item key="123">Create announcement</Menu.Item>
-                <Menu.Item key="3" onClick={logout}>
-                  Log out
+                <Menu.Item key="123">
+                  <NavLink to="/profile">Create announcement</NavLink>
                 </Menu.Item>
                 <Menu.Item key="4">
-                  <NavLink to="/profile">
-                   Profile
-                  </NavLink>
+                  <NavLink to="/profile">Profile</NavLink>
+                </Menu.Item>
+                <Menu.Item key="3" onClick={logout}>
+                  Log out
                 </Menu.Item>
               </>
             )}
