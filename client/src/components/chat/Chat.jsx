@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { Modal, Input, Button, List, Typography } from "antd";
 import { useGetChatMutation } from "../../redux/api/userApi";
 import { useGetUserQuery } from "../../redux/api/userApi";
-import ErrorList from "antd/es/form/ErrorList";
+
+import "./chat.scss";
 
 const { TextArea } = Input;
 const { Text } = Typography;
@@ -15,7 +16,9 @@ const ChatModal = ({
   client = false,
   uniqueID = "",
 }) => {
-  const [getChat, { isLoading, isError, error }] = useGetChatMutation();
+  const [getChat, { isLoading, isError, error }] = useGetChatMutation({
+    refetchOnMountOrArgChange: true,
+  });
   const { data: user = {} } = useGetUserQuery();
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState("");
@@ -89,6 +92,7 @@ const ChatModal = ({
   return (
     <div>
       <Modal
+        className="chat"
         title="Chat"
         open={openChat}
         onCancel={() => setOpenChat(false)}
@@ -96,17 +100,22 @@ const ChatModal = ({
       >
         <List
           bordered
+          className="chat__list"
           dataSource={messages}
           renderItem={(item) => (
             <List.Item
               style={{
-                background: item.user === user.id ? "rgba(0, 0, 0, .05)" : null,
+                background:
+                  item.user === user.username ? "rgba(0, 0, 0, .05)" : null,
                 display: "flex",
-                justifyContent: item.user === user.id ? "flex-end" : null,
+                justifyContent: item.user === user.username ? "flex-end" : null,
               }}
             >
               <Text>
-                {item.user} - {item.text}
+                <div style={{ fontSize: "smaller", opacity: ".5" }}>
+                  {item.user}
+                </div>
+                <div>{item.text}</div>
               </Text>
             </List.Item>
           )}

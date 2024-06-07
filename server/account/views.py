@@ -41,7 +41,6 @@ class GetCurrentUser(APIView):
         user = request.user
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
     
 
 class GetUserProduct(ListAPIView):
@@ -62,4 +61,3 @@ class GetUserChat(ListAPIView):
         user_id = self.request.user.id
         queryset = Room.objects.filter(Q(seller=user_id) | Q(client=user_id))
         return queryset.order_by('-id')
-    
