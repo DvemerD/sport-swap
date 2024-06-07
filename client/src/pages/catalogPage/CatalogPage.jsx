@@ -1,6 +1,6 @@
+import { useState } from "react";
 import ProductList from "../../components/productList/ProductList";
 import Subheader from "../../components/subheader/Subheader";
-import { useState } from "react";
 
 const CatalogPage = () => {
   const [searchTerm, setSearchTerm] = useState("");

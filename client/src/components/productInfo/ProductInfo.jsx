@@ -157,7 +157,7 @@ const ProductInfo = ({ data, open, setOpen }) => {
                   Chat
                 </Button>
                 <Button
-                  disabled={!(!days && !token)}
+                  disabled={!(!!days && !!token)}
                   className="drawer__button"
                   type="primary"
                   htmlType="button"

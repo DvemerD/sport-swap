@@ -26,6 +26,13 @@ export const userApi = createApi({
       }),
       invalidatesTags: ["Products"],
     }),
+    deleteProduct: builder.mutation({
+      query: (id) => ({
+        url: `products/${id}`,
+        method: "DELETE"
+      }),
+      invalidatesTags: ["Products"],
+    }),
     getUserProducts: builder.query({
       query: () => "get_user_products/",
       providesTags: ["Products"],
@@ -57,5 +64,6 @@ export const {
   useGetUserChatQuery,
   useGetChatMutation,
   useChangeUserInfoMutation,
-  useCreateOrderMutation
+  useCreateOrderMutation,
+  useDeleteProductMutation
 } = userApi;
