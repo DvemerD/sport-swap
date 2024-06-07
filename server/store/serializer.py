@@ -1,4 +1,3 @@
-from uuid import uuid4
 from rest_framework import serializers
 from .models import (
     Category,
@@ -8,6 +7,7 @@ from .models import (
     Order
 )
 from account.serializer import UserSerializer
+from account.models import CustomUser
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -55,24 +55,22 @@ class ProductCreateSerializer(serializers.ModelSerializer):
         return product
 
     def update(self, instance, validated_data):
-        user_data = validated_data.pop('user', {})
-        product = Product.objects.filter(id=validated_data.get('id'))
-        category = Category.objects.filter(id=validated_data.get('category'))
-        city = City.objects.filter(id=validated_data.get('location_product'))
+        images_data = validated_data.pop('image', [])
 
-        if product.user.id == user_data.get('id'):
-            instance.title = validated_data.get('title')
-            instance.description = validated_data.get('description')
-            if category:
-                instance.category = category
-            if city:
-                instance.location_product = city
+        instance.title = validated_data.get('title', instance.title)
+        instance.category = validated_data.get('category', instance.category)
+        instance.description = validated_data.get('description', instance.description)
+        instance.location_product = validated_data.get('location_product', instance.location_product)
+        instance.price = validated_data.get('price', instance.price)
+        instance.active = validated_data.get('active', instance.active)
+        instance.save()
 
-            instance.price = validated_data.get('price')
-            instance.active = validated_data.get('active')
-
-            instance.save()
-
+        if images_data:
+            instance.image.clear()
+            for image_data in images_data:
+                image = Image.objects.create(url=image_data)
+                instance.image.add(image)
+        
         return instance
 
 

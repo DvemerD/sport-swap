@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Modal, Input, Button, List, Typography } from "antd";
 import { useGetChatMutation } from "../../redux/api/userApi";
 import { useGetUserQuery } from "../../redux/api/userApi";
+import ErrorList from "antd/es/form/ErrorList";
 
 const { TextArea } = Input;
 const { Text } = Typography;
@@ -30,6 +31,7 @@ const ChatModal = ({
           throw new Error(res.status);
         } else {
           initWebSocket(res.data.unique_id);
+          setUniqueId(res.data.unique_id);
         }
       })
       .catch((err) => {
@@ -53,7 +55,11 @@ const ChatModal = ({
     ws.current.onmessage = (data) => {
       const dataParsed = JSON.parse(data.data);
       if (dataParsed.message_history) {
-        setMessages([...dataParsed.message_history]);
+        const newArr = dataParsed.message_history.map((item) => ({
+          text: item.message,
+          user: item.user,
+        }));
+        setMessages(newArr);
       } else {
         setMessages((prevMessages) => [
           ...prevMessages,
@@ -73,7 +79,7 @@ const ChatModal = ({
         JSON.stringify({
           message: inputValue,
           room: uniqueId,
-          user: client || user.id,
+          user: user.id,
         })
       );
       setInputValue("");
@@ -92,7 +98,13 @@ const ChatModal = ({
           bordered
           dataSource={messages}
           renderItem={(item) => (
-            <List.Item>
+            <List.Item
+              style={{
+                background: item.user === user.id ? "rgba(0, 0, 0, .05)" : null,
+                display: "flex",
+                justifyContent: item.user === user.id ? "flex-end" : null,
+              }}
+            >
               <Text>
                 {item.user} - {item.text}
               </Text>
@@ -100,8 +112,8 @@ const ChatModal = ({
           )}
           style={{
             marginBottom: "10px",
-            overflowY: "auto",
-            maxHeight: "calc(100% - 100px)",
+            overflowY: "scroll",
+            maxHeight: "350px",
           }}
         />
         <div style={{ display: "flex" }}>

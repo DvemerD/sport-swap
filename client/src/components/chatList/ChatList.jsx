@@ -6,7 +6,7 @@ import Chat from "../chat/Chat";
 const ChatList = () => {
   const { data: chats = [], error, isLoading } = useGetUserChatQuery();
   const { data: userData, isFetching } = useGetUserQuery();
-  const [openChat, setOpenChat] = useState(false);
+  const [openChat, setOpenChat] = useState(null);
 
   return (
     <>
@@ -15,7 +15,7 @@ const ChatList = () => {
         dataSource={chats}
         renderItem={(item) => (
           <div>
-            {openChat && (
+            {openChat === item.unique_id && (
               <Chat
                 openChat={openChat}
                 setOpenChat={setOpenChat}
@@ -26,17 +26,17 @@ const ChatList = () => {
               />
             )}
             <List.Item
-              style={{ cursor: "pointer" }}
-              onClick={() => setOpenChat(true)}
+              style={{ cursor: "pointer", marginTop: 20, marginBottom: 20 }}
+              onClick={() => setOpenChat(item.unique_id)}
             >
-                <List.Item.Meta
-                  avatar={<Avatar src="#" />}
-                  title={item.unique_id}
-                  description={`Chat with user ID ${
-                    userData.id === item.client ? item.seller : item.client
-                  }`}
-                  style={{ display: "flex", alignItems: "center" }}
-                />
+              <List.Item.Meta
+                avatar={<Avatar src="#" />}
+                title={item.unique_id}
+                description={`Chat with user ID ${
+                  userData.id === item.client ? item.seller : item.client
+                }`}
+                style={{ display: "flex", alignItems: "center" }}
+              />
             </List.Item>
           </div>
         )}

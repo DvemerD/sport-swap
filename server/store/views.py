@@ -59,3 +59,4 @@ class OrderView(ListAPIView, CreateAPIView):
         user_id = self.request.user
         queryset = Order.objects.filter(user=user_id.id, pay=True)
         return queryset
+    
