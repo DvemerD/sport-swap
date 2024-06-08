@@ -1,7 +1,10 @@
 import { EllipsisOutlined } from "@ant-design/icons";
 import { Col, Card, Menu, Dropdown, Button, message } from "antd";
 import { useEffect, useState } from "react";
-import { useDeleteProductMutation } from "../../redux/api/userApi";
+import {
+  useDeleteProductMutation,
+  usePutProductMutation,
+} from "../../redux/api/userApi";
 
 const UserProductItem = ({ data }) => {
   const [
@@ -13,6 +16,15 @@ const UserProductItem = ({ data }) => {
       error: errorDelete,
     },
   ] = useDeleteProductMutation();
+  const [
+    putProduct,
+    {
+      isLoading: isPutLoading,
+      isSuccess: isPutSuccess,
+      isError: isPutError,
+      error: errorPut,
+    },
+  ] = usePutProductMutation();
   const [messageApi, contextHolder] = message.useMessage();
   const [open, setOpen] = useState(false);
 
@@ -22,12 +34,17 @@ const UserProductItem = ({ data }) => {
         `Failed to delete product: ${errorDelete.message || "Unknown error"}`
       );
     }
-  }, [isDeleteError, errorDelete]);
+    if (isPutError && errorPut) {
+      message.error(
+        `Failed to change product: ${errorDelete.message || "Unknown error"}`
+      );
+    }
+  }, [isDeleteError, errorDelete, isPutError, errorPut]);
 
   const menu = (
     <Menu>
-      <Menu.Item key="1" onClick={() => console.log("Edit")}>
-        Edit
+      <Menu.Item key="1" onClick={() => handlePut()}>
+        {data.active ? "To deactivate" : "To activate"}
       </Menu.Item>
       <Menu.Item key="2" onClick={() => handleDelete()}>
         Delete
@@ -40,6 +57,26 @@ const UserProductItem = ({ data }) => {
       .unwrap()
       .then(() => {
         message.success("Product deleted successfully!");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handlePut = () => {
+    const obj = {
+      ...data,
+      active: !data.active,
+      category: data.category.id,
+      user: data.user.id,
+      location_product: data.location_product.id,
+    };
+    delete obj.image;
+
+    putProduct({ id: data.id, data: obj })
+      .unwrap()
+      .then(() => {
+        message.success("Product changed successfully!");
       })
       .catch((err) => {
         console.log(err);
@@ -74,7 +111,11 @@ const UserProductItem = ({ data }) => {
             <img
               alt={`image ${data.title}`}
               src={data.image[0].url}
-              style={{ height: "240px", objectFit: "cover" }}
+              style={{
+                height: "240px",
+                objectFit: "cover",
+                opacity: !data.active ? ".3" : null,
+              }}
             />
           }
           onClick={() => setOpen(true)}

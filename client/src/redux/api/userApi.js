@@ -29,9 +29,17 @@ export const userApi = createApi({
     deleteProduct: builder.mutation({
       query: (id) => ({
         url: `products/${id}`,
-        method: "DELETE"
+        method: "DELETE",
       }),
       invalidatesTags: ["Products", "Chat"],
+    }),
+    putProduct: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `products/${id}/`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["Products"],
     }),
     getUserProducts: builder.query({
       query: () => "get_user_products/",
@@ -66,5 +74,6 @@ export const {
   useGetChatMutation,
   useChangeUserInfoMutation,
   useCreateOrderMutation,
-  useDeleteProductMutation
+  useDeleteProductMutation,
+  usePutProductMutation,
 } = userApi;

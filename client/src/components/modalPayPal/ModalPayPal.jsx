@@ -2,7 +2,6 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { Modal } from "antd";
 import {
   useCreateOrderMutation,
-  useGetUserQuery,
 } from "../../redux/api/userApi";
 
 const ModalPayPal = ({
@@ -11,11 +10,11 @@ const ModalPayPal = ({
   price,
   dates,
   productId,
-  setShowResult
+  setShowResult,
+  user
 }) => {
   const [createOrder, { isLoading, error }] = useCreateOrderMutation();
-  const { data: user = {} } = useGetUserQuery();
-  
+
   const handleOk = () => {
     setIsModalOpen(false);
   };
@@ -52,6 +51,7 @@ const ModalPayPal = ({
             }}
             onApprove={(dataP, actions) => {
               return actions.order.capture().then((details) => {
+                console.log(user);
                 createOrder({
                   unique_id: details.id,
                   user: user.id,

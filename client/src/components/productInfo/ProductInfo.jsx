@@ -14,8 +14,10 @@ import {
 import { RightOutlined, LeftOutlined } from "@ant-design/icons";
 
 import "./productInfo.scss";
+import { useGetUserQuery } from "../../redux/api/userApi";
 
 const ProductInfo = ({ data, open, setOpen }) => {
+  const { data: user = {} } = useGetUserQuery();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const token = useSelector((state) => state.auth.token);
   const [dates, setDates] = useState([]);
@@ -179,6 +181,7 @@ const ProductInfo = ({ data, open, setOpen }) => {
           dates={dates}
           productId={data.id}
           setShowResult={setShowResult}
+          user={user}
         />
       )}
     </>
