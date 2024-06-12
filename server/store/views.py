@@ -51,7 +51,6 @@ class ProductsView(ModelViewSet):
         if self.action in ['create', 'update', 'destroy']:
             return ProductCreateSerializer
         return self.serializer_class
-
     
 
 class OrderView(ListAPIView, CreateAPIView):

@@ -36,7 +36,7 @@ class ChatConsumer(WebsocketConsumer):
 
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name, {
-                "type": "chat_message", "user": msg.user.username, "room": room_id, "message": message
+                "type": "chat_message", "user": user.username, "room": room_id, "message": message
                 }
         )
     
@@ -57,3 +57,6 @@ class ChatConsumer(WebsocketConsumer):
             })
 
         self.send(text_data=json.dumps({"message_history": message_list}))
+
+            
+
